@@ -699,26 +699,15 @@
         if (currentMode === 'merge-pdf' || currentMode === 'img-to-pdf') {
           moveBtns = `
             <div class="flex items-center gap-1 mr-3 flex-shrink-0">
-              <button onclick="moveFile(${index}, -1)" ${index === 0 ? 'disabled class="opacity-30 cursor-not-allowed"' : 'class="hover:text-indigo-400"'} class="p-1 text-slate-400 text-xs">▲</button>
-              <button onclick="moveFile(${index}, 1)" ${index === selectedFiles.length - 1 ? 'disabled class="opacity-30 cursor-not-allowed"' : 'class="hover:text-indigo-400"'} class="p-1 text-slate-400 text-xs">▼</button>
+              <button onclick="moveFile(${index}, -1)" ${index === 0 ? 'disabled class="opacity-30 cursor-not-allowed"' : 'class="hover:text-purple-400"'} class="p-1 text-slate-400 text-xs">▲</button>
+              <button onclick="moveFile(${index}, 1)" ${index === selectedFiles.length - 1 ? 'disabled class="opacity-30 cursor-not-allowed"' : 'class="hover:text-purple-400"'} class="p-1 text-slate-400 text-xs">▼</button>
             </div>
           `;
-        }
-
-        const fileExt = file.name.split('.').pop().toLowerCase();
-        let iconHtml = '';
-        if (fileExt === 'pdf') {
-          iconHtml = `<svg class="w-4.5 h-4.5 text-rose-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>`;
-        } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExt)) {
-          iconHtml = `<svg class="w-4.5 h-4.5 text-emerald-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>`;
-        } else {
-          iconHtml = `<svg class="w-4.5 h-4.5 text-slate-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>`;
         }
 
         item.innerHTML = `
           <div class="flex items-center truncate pr-2 flex-1">
             ${moveBtns}
-            ${iconHtml}
             <div class="truncate flex-1">
               <p class="text-xs font-semibold text-slate-200 truncate">${file.name}</p>
               <p class="text-[10px] text-slate-400 font-mono-num mt-0.5">${formatBytes(file.size)}</p>
