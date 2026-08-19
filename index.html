@@ -94,6 +94,15 @@
       background-color: rgba(245, 158, 11, 0.08) !important;
       box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
     }
+    
+    /* Drag and drop item styles */
+    .drag-over {
+      border-color: #6366f1 !important;
+      background-color: rgba(99, 102, 241, 0.05) !important;
+    }
+    .dragging {
+      opacity: 0.4;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center pt-6 sm:pt-8 pb-6 px-3 sm:px-6 md:px-8 relative overflow-x-hidden">
@@ -691,16 +700,57 @@
         return;
       }
 
+      const isReorderable = (currentMode === 'merge-pdf' || currentMode === 'img-to-pdf');
+
       selectedFiles.forEach((file, index) => {
         const item = document.createElement('div');
-        item.className = "bg-slate-900/80 rounded-xl p-3 border border-slate-800 flex items-center justify-between";
+        
+        if (isReorderable) {
+          item.className = "bg-slate-900/80 rounded-xl p-3 border border-slate-800 flex items-center justify-between cursor-move select-none transition-all duration-200";
+          item.setAttribute('draggable', true);
+          
+          item.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', index);
+            item.classList.add('dragging');
+          });
+
+          item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+          });
+
+          item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            item.classList.add('drag-over');
+          });
+
+          item.addEventListener('dragleave', () => {
+            item.classList.remove('drag-over');
+          });
+
+          item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            item.classList.remove('drag-over');
+            const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+            const toIndex = index;
+            if (fromIndex !== toIndex && !isNaN(fromIndex)) {
+              const draggedItem = selectedFiles[fromIndex];
+              selectedFiles.splice(fromIndex, 1);
+              selectedFiles.splice(toIndex, 0, draggedItem);
+              renderSelectedFileList();
+              updateActionState();
+            }
+          });
+        } else {
+          item.className = "bg-slate-900/80 rounded-xl p-3 border border-slate-800 flex items-center justify-between";
+        }
         
         let moveBtns = '';
-        if (currentMode === 'merge-pdf' || currentMode === 'img-to-pdf') {
+        if (isReorderable) {
           moveBtns = `
-            <div class="flex items-center gap-1 mr-3 flex-shrink-0">
-              <button onclick="moveFile(${index}, -1)" ${index === 0 ? 'disabled class="opacity-30 cursor-not-allowed"' : 'class="hover:text-purple-400"'} class="p-1 text-slate-400 text-xs">▲</button>
-              <button onclick="moveFile(${index}, 1)" ${index === selectedFiles.length - 1 ? 'disabled class="opacity-30 cursor-not-allowed"' : 'class="hover:text-purple-400"'} class="p-1 text-slate-400 text-xs">▼</button>
+            <div class="text-slate-500 mr-3 flex-shrink-0 cursor-move select-none opacity-60 hover:opacity-100 transition-opacity">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+              </svg>
             </div>
           `;
         }
