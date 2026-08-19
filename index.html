@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SUPER COMPRESS</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
+  
+  <!-- PWA Meta Tags and Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   
@@ -901,8 +909,6 @@
       const minTargetZone = maxBytes * 0.85;
       const maxTargetZone = maxBytes * 0.98;
 
-      // Sesuaikan skala maksimal secara dinamis berdasarkan jumlah halaman
-      // agar hemat memori browser dan mencegah crash pada dokumen tebal.
       let maxScale = 3.0;
       if (totalPages > 20) {
         maxScale = 1.2;
@@ -938,7 +944,6 @@
           const page = await pdf.getPage(i);
           const unscaledViewport = page.getViewport({ scale: 1.0 });
 
-          // Pengaman ukuran resolusi canvas maksimal 3000px agar tidak crash
           let scale = midScale;
           const maxDimension = 3000;
           if (unscaledViewport.width * scale > maxDimension || unscaledViewport.height * scale > maxDimension) {
@@ -987,7 +992,6 @@
           highScale = midScale;
         }
 
-        // Hentikan bisection lebih awal hanya ketika kualitas & skala mendekati batas ruang pencariannya
         if (midQ >= 0.95 && midScale >= 0.95 * maxScale && currentSize < minTargetZone) {
           bestBlobUnderTarget = currentBlob;
           break;
@@ -1346,6 +1350,17 @@
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    }
+  </script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker registered successfully!', reg.scope))
+          .catch((err) => console.log('Service Worker registration failed:', err));
+      });
     }
   </script>
 </body>
