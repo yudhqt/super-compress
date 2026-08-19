@@ -72,7 +72,7 @@
     }
 
     #mainContainer {
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .dashboard-pushed {
       transform: translateX(-160px);
@@ -86,52 +86,6 @@
       .dashboard-pushed {
         transform: translateX(0);
       }
-    }
-
-    /* Snappy 120fps Click Physics */
-    button, 
-    .preset-btn, 
-    .page-thumb, 
-    .glass-card,
-    #categoryTabs button {
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                  background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                  border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
-    }
-
-    /* Active pressing scaling effect */
-    button:active:not(:disabled), 
-    .preset-btn:active, 
-    .page-thumb:active, 
-    .glass-card:active:not([disabled]) {
-      transform: scale(0.96) !important;
-    }
-
-    /* Smooth Fade & Slide In Animations with Stagger support */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(18px) scale(0.985);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-    .animate-fade-in-up {
-      animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-    }
-
-    /* Sidebar fluid movement overrides */
-    #previewSidebar {
-      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    #sidebarOverlay {
-      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
   </style>
 </head>
@@ -469,13 +423,11 @@
         imgBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
         pdfGrid.classList.remove('hidden');
         imgGrid.classList.add('hidden');
-        staggerChildren(pdfGrid, 60);
       } else {
         imgBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all bg-emerald-600 text-white shadow-md";
         pdfBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
         imgGrid.classList.remove('hidden');
         pdfGrid.classList.add('hidden');
-        staggerChildren(imgGrid, 60);
       }
     }
 
@@ -483,10 +435,7 @@
       currentMode = mode;
       document.getElementById('modeSelection').classList.add('hidden');
       document.getElementById('categoryTabs').classList.add('hidden');
-      
-      const uploadSec = document.getElementById('uploadSection');
-      uploadSec.classList.remove('hidden');
-      staggerChildren(uploadSec, 70);
+      document.getElementById('uploadSection').classList.remove('hidden');
 
       const badge = document.getElementById('currentModeBadge');
       const fileInput = document.getElementById('fileInput');
@@ -559,18 +508,8 @@
       document.getElementById('uploadSection').classList.add('hidden');
       document.getElementById('loadingSection').classList.add('hidden');
       document.getElementById('resultSection').classList.add('hidden');
-      
-      const modeSelection = document.getElementById('modeSelection');
-      modeSelection.classList.remove('hidden');
-      const activeGrid = currentCategory === 'pdf' ? document.getElementById('pdfGrid') : document.getElementById('imageGrid');
-      staggerChildren(activeGrid, 60);
-
-      const categoryTabs = document.getElementById('categoryTabs');
-      categoryTabs.classList.remove('hidden');
-      categoryTabs.classList.remove('animate-fade-in-up');
-      void categoryTabs.offsetWidth;
-      categoryTabs.classList.add('animate-fade-in-up');
-
+      document.getElementById('modeSelection').classList.remove('hidden');
+      document.getElementById('categoryTabs').classList.remove('hidden');
       closePreviewSidebar();
     }
 
@@ -583,13 +522,7 @@
 
       document.getElementById('loadingSection').classList.add('hidden');
       document.getElementById('resultSection').classList.add('hidden');
-      
-      const uploadSec = document.getElementById('uploadSection');
-      uploadSec.classList.remove('hidden');
-      uploadSec.classList.remove('animate-fade-in-up');
-      void uploadSec.offsetWidth;
-      uploadSec.classList.add('animate-fade-in-up');
-
+      document.getElementById('uploadSection').classList.remove('hidden');
       closePreviewSidebar();
     }
 
@@ -598,6 +531,15 @@
       document.getElementById('toastMsg').innerText = msg;
       toast.classList.remove('-translate-y-24', 'opacity-0');
       setTimeout(() => toast.classList.add('-translate-y-24', 'opacity-0'), 3000);
+    }
+
+    // Ubah pembulatan file size agar lebih akurat
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     function setPresetTarget(kb, btnElem) {
@@ -649,15 +591,6 @@
     function handleFileSelect(e) {
       const files = Array.from(e.target.files);
       if (files.length > 0) processFileSelection(files);
-    }
-
-    // Ubah pembulatan file size agar lebih akurat
-    function formatBytes(bytes) {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     async function processFileSelection(files) {
@@ -809,8 +742,7 @@
           page.cleanup();
 
           const card = document.createElement('div');
-          card.className = "page-thumb cursor-pointer border-2 border-slate-800 rounded-xl p-2 bg-slate-900 flex flex-col items-center justify-between relative select-none animate-fade-in-up";
-          card.style.animationDelay = `${i * 35}ms`;
+          card.className = "page-thumb cursor-pointer border-2 border-slate-800 rounded-xl p-2 bg-slate-900 flex flex-col items-center justify-between relative select-none";
           card.id = `thumb-page-${i}`;
           card.onclick = () => toggleSplitPage(i);
 
@@ -1278,10 +1210,7 @@
 
     function displayResults(originalSize, resultSize, isUtilityMode = false) {
       document.getElementById('loadingSection').classList.add('hidden');
-      
-      const resultSec = document.getElementById('resultSection');
-      resultSec.classList.remove('hidden');
-      staggerChildren(resultSec, 80);
+      document.getElementById('resultSection').classList.remove('hidden');
 
       document.getElementById('originalSizeText').innerText = formatBytes(originalSize);
       document.getElementById('compressedSizeText').innerText = formatBytes(resultSize);
@@ -1426,11 +1355,6 @@
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     }
-
-    // Initial stagger animation on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      staggerChildren(document.getElementById('pdfGrid'), 70);
-    });
   </script>
 
   <!-- PWA Service Worker Registration -->
