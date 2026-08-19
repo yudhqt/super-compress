@@ -72,7 +72,7 @@
     }
 
     #mainContainer {
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .dashboard-pushed {
       transform: translateX(-160px);
@@ -86,6 +86,52 @@
       .dashboard-pushed {
         transform: translateX(0);
       }
+    }
+
+    /* Snappy 120fps Click Physics */
+    button, 
+    .preset-btn, 
+    .page-thumb, 
+    .glass-card,
+    #categoryTabs button {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                  background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+
+    /* Active pressing scaling effect */
+    button:active:not(:disabled), 
+    .preset-btn:active, 
+    .page-thumb:active, 
+    .glass-card:active:not([disabled]) {
+      transform: scale(0.96) !important;
+    }
+
+    /* Smooth Fade & Slide In Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Sidebar fluid movement overrides */
+    #previewSidebar {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    #sidebarOverlay {
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
   </style>
 </head>
@@ -423,11 +469,19 @@
         imgBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
         pdfGrid.classList.remove('hidden');
         imgGrid.classList.add('hidden');
+
+        pdfGrid.classList.remove('animate-fade-in-up');
+        void pdfGrid.offsetWidth;
+        pdfGrid.classList.add('animate-fade-in-up');
       } else {
         imgBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all bg-emerald-600 text-white shadow-md";
         pdfBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
         imgGrid.classList.remove('hidden');
         pdfGrid.classList.add('hidden');
+
+        imgGrid.classList.remove('animate-fade-in-up');
+        void imgGrid.offsetWidth;
+        imgGrid.classList.add('animate-fade-in-up');
       }
     }
 
@@ -435,7 +489,12 @@
       currentMode = mode;
       document.getElementById('modeSelection').classList.add('hidden');
       document.getElementById('categoryTabs').classList.add('hidden');
-      document.getElementById('uploadSection').classList.remove('hidden');
+      
+      const uploadSec = document.getElementById('uploadSection');
+      uploadSec.classList.remove('hidden');
+      uploadSec.classList.remove('animate-fade-in-up');
+      void uploadSec.offsetWidth;
+      uploadSec.classList.add('animate-fade-in-up');
 
       const badge = document.getElementById('currentModeBadge');
       const fileInput = document.getElementById('fileInput');
@@ -508,8 +567,19 @@
       document.getElementById('uploadSection').classList.add('hidden');
       document.getElementById('loadingSection').classList.add('hidden');
       document.getElementById('resultSection').classList.add('hidden');
-      document.getElementById('modeSelection').classList.remove('hidden');
-      document.getElementById('categoryTabs').classList.remove('hidden');
+      
+      const modeSelection = document.getElementById('modeSelection');
+      modeSelection.classList.remove('hidden');
+      modeSelection.classList.remove('animate-fade-in-up');
+      void modeSelection.offsetWidth;
+      modeSelection.classList.add('animate-fade-in-up');
+
+      const categoryTabs = document.getElementById('categoryTabs');
+      categoryTabs.classList.remove('hidden');
+      categoryTabs.classList.remove('animate-fade-in-up');
+      void categoryTabs.offsetWidth;
+      categoryTabs.classList.add('animate-fade-in-up');
+
       closePreviewSidebar();
     }
 
@@ -522,7 +592,13 @@
 
       document.getElementById('loadingSection').classList.add('hidden');
       document.getElementById('resultSection').classList.add('hidden');
-      document.getElementById('uploadSection').classList.remove('hidden');
+      
+      const uploadSec = document.getElementById('uploadSection');
+      uploadSec.classList.remove('hidden');
+      uploadSec.classList.remove('animate-fade-in-up');
+      void uploadSec.offsetWidth;
+      uploadSec.classList.add('animate-fade-in-up');
+
       closePreviewSidebar();
     }
 
@@ -909,6 +985,8 @@
       const minTargetZone = maxBytes * 0.85;
       const maxTargetZone = maxBytes * 0.98;
 
+      // Sesuaikan skala maksimal secara dinamis berdasarkan jumlah halaman
+      // agar hemat memori browser dan mencegah crash pada dokumen tebal.
       let maxScale = 3.0;
       if (totalPages > 20) {
         maxScale = 1.2;
@@ -944,6 +1022,7 @@
           const page = await pdf.getPage(i);
           const unscaledViewport = page.getViewport({ scale: 1.0 });
 
+          // Pengaman ukuran resolusi canvas maksimal 3000px agar tidak crash
           let scale = midScale;
           const maxDimension = 3000;
           if (unscaledViewport.width * scale > maxDimension || unscaledViewport.height * scale > maxDimension) {
@@ -992,6 +1071,7 @@
           highScale = midScale;
         }
 
+        // Hentikan bisection lebih awal hanya ketika kualitas & skala mendekati batas ruang pencariannya
         if (midQ >= 0.95 && midScale >= 0.95 * maxScale && currentSize < minTargetZone) {
           bestBlobUnderTarget = currentBlob;
           break;
@@ -1206,7 +1286,12 @@
 
     function displayResults(originalSize, resultSize, isUtilityMode = false) {
       document.getElementById('loadingSection').classList.add('hidden');
-      document.getElementById('resultSection').classList.remove('hidden');
+      
+      const resultSec = document.getElementById('resultSection');
+      resultSec.classList.remove('hidden');
+      resultSec.classList.remove('animate-fade-in-up');
+      void resultSec.offsetWidth;
+      resultSec.classList.add('animate-fade-in-up');
 
       document.getElementById('originalSizeText').innerText = formatBytes(originalSize);
       document.getElementById('compressedSizeText').innerText = formatBytes(resultSize);
