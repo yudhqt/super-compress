@@ -94,12 +94,12 @@
     .page-thumb, 
     .glass-card,
     #categoryTabs button {
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                  background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                  border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                  background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform;
     }
 
@@ -111,11 +111,11 @@
       transform: scale(0.96) !important;
     }
 
-    /* Smooth Fade & Slide In Animations */
+    /* Smooth Fade & Slide In Animations with Stagger support */
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(12px) scale(0.99);
+        transform: translateY(18px) scale(0.985);
       }
       to {
         opacity: 1;
@@ -123,15 +123,15 @@
       }
     }
     .animate-fade-in-up {
-      animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     }
 
     /* Sidebar fluid movement overrides */
     #previewSidebar {
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     #sidebarOverlay {
-      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
   </style>
 </head>
@@ -469,19 +469,13 @@
         imgBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
         pdfGrid.classList.remove('hidden');
         imgGrid.classList.add('hidden');
-
-        pdfGrid.classList.remove('animate-fade-in-up');
-        void pdfGrid.offsetWidth;
-        pdfGrid.classList.add('animate-fade-in-up');
+        staggerChildren(pdfGrid, 60);
       } else {
         imgBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all bg-emerald-600 text-white shadow-md";
         pdfBtn.className = "px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
         imgGrid.classList.remove('hidden');
         pdfGrid.classList.add('hidden');
-
-        imgGrid.classList.remove('animate-fade-in-up');
-        void imgGrid.offsetWidth;
-        imgGrid.classList.add('animate-fade-in-up');
+        staggerChildren(imgGrid, 60);
       }
     }
 
@@ -492,9 +486,7 @@
       
       const uploadSec = document.getElementById('uploadSection');
       uploadSec.classList.remove('hidden');
-      uploadSec.classList.remove('animate-fade-in-up');
-      void uploadSec.offsetWidth;
-      uploadSec.classList.add('animate-fade-in-up');
+      staggerChildren(uploadSec, 70);
 
       const badge = document.getElementById('currentModeBadge');
       const fileInput = document.getElementById('fileInput');
@@ -570,9 +562,8 @@
       
       const modeSelection = document.getElementById('modeSelection');
       modeSelection.classList.remove('hidden');
-      modeSelection.classList.remove('animate-fade-in-up');
-      void modeSelection.offsetWidth;
-      modeSelection.classList.add('animate-fade-in-up');
+      const activeGrid = currentCategory === 'pdf' ? document.getElementById('pdfGrid') : document.getElementById('imageGrid');
+      staggerChildren(activeGrid, 60);
 
       const categoryTabs = document.getElementById('categoryTabs');
       categoryTabs.classList.remove('hidden');
@@ -818,7 +809,8 @@
           page.cleanup();
 
           const card = document.createElement('div');
-          card.className = "page-thumb cursor-pointer border-2 border-slate-800 rounded-xl p-2 bg-slate-900 flex flex-col items-center justify-between relative select-none";
+          card.className = "page-thumb cursor-pointer border-2 border-slate-800 rounded-xl p-2 bg-slate-900 flex flex-col items-center justify-between relative select-none animate-fade-in-up";
+          card.style.animationDelay = `${i * 35}ms`;
           card.id = `thumb-page-${i}`;
           card.onclick = () => toggleSplitPage(i);
 
@@ -1289,9 +1281,7 @@
       
       const resultSec = document.getElementById('resultSection');
       resultSec.classList.remove('hidden');
-      resultSec.classList.remove('animate-fade-in-up');
-      void resultSec.offsetWidth;
-      resultSec.classList.add('animate-fade-in-up');
+      staggerChildren(resultSec, 80);
 
       document.getElementById('originalSizeText').innerText = formatBytes(originalSize);
       document.getElementById('compressedSizeText').innerText = formatBytes(resultSize);
@@ -1436,6 +1426,11 @@
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     }
+
+    // Initial stagger animation on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      staggerChildren(document.getElementById('pdfGrid'), 70);
+    });
   </script>
 
   <!-- PWA Service Worker Registration -->
