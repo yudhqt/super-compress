@@ -13,7 +13,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
   
   <!-- PWA Meta Tags and Manifest -->
-  <link rel="manifest" href="manifest.json?v=2.0.0">
+  <link rel="manifest" href="manifest.json?v=2.0.1">
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -124,6 +124,79 @@
       border-color: #6366f1 !important;
       background: rgba(99, 102, 241, 0.15) !important;
     }
+
+    /* Coming Soon Animation */
+    .coming-soon-card {
+      opacity: 0.4;
+      cursor: not-allowed;
+      position: relative;
+      overflow: hidden;
+    }
+    .coming-soon-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(99, 102, 241, 0.05) 60%, transparent 80%);
+      background-size: 200% 200%;
+      animation: shimmerGlow 3s ease-in-out infinite;
+    }
+    @keyframes shimmerGlow {
+      0% { background-position: -200% -200%; }
+      100% { background-position: 200% 200%; }
+    }
+    .coming-soon-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(99, 102, 241, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 7px;
+      font-weight: 700;
+      color: #818cf8;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    /* Judul card 1 baris */
+    .card-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .card-subtitle {
+      font-size: 8px;
+      color: #94A3B8;
+      margin-top: 2px;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+    @media (min-width: 640px) {
+      .card-title { font-size: 12px; }
+      .card-subtitle { font-size: 10px; }
+    }
+    .group:hover .card-title { color: #818cf8; }
+    .group:hover .card-subtitle { color: #CBD5E1; }
+
+    /* Warna hover per card */
+    .group:hover .icon-indigo { color: #818cf8; }
+    .group:hover .icon-rose { color: #fb7185; }
+    .group:hover .icon-amber { color: #fbbf24; }
+    .group:hover .icon-cyan { color: #22d3ee; }
+    .group:hover .icon-lime { color: #a3e635; }
+    .group:hover .icon-orange { color: #fb923c; }
+    .group:hover .icon-teal { color: #2dd4bf; }
+    .group:hover .icon-emerald { color: #34d399; }
+    .group:hover .icon-purple { color: #a78bfa; }
+    .group:hover .icon-pink { color: #f472b6; }
+    .group:hover .icon-fuchsia { color: #e879f9; }
+    .group:hover .icon-violet { color: #a78bfa; }
+    .group:hover .icon-sky { color: #38bdf8; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center pt-6 sm:pt-8 pb-6 px-3 sm:px-6 md:px-8 relative overflow-x-hidden">
@@ -172,73 +245,226 @@
     <main class="w-full relative z-10 flex flex-col items-center justify-center">
 
       <div id="modeSelection" class="w-full">
-        <div id="pdfGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-          <button onclick="selectMode('compress-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-indigo-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
-            <div class="w-11 h-11 mb-2 sm:mb-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <!-- PDF TOOLS GRID -->
+        <div id="pdfGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          
+          <!-- 1. Compress PDF -->
+          <button onclick="selectMode('compress-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-indigo-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-indigo">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14 2v6h6" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 11v6m-2-2l2 2 2-2" />
               </svg>
             </div>
-            <h3 class="text-xs sm:text-base font-bold text-white group-hover:text-indigo-300 transition-colors">Compress PDF</h3>
-            <p class="text-[9px] sm:text-[11px] text-slate-400 mt-1 leading-tight">Reduce file size</p>
+            <span class="card-title group-hover:text-indigo-300">Compress PDF</span>
+            <span class="card-subtitle group-hover:text-slate-300">Reduce file size</span>
           </button>
 
-          <button onclick="selectMode('merge-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-rose-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
-            <div class="w-11 h-11 mb-2 sm:mb-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+          <!-- 2. Merge PDF -->
+          <button onclick="selectMode('merge-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-rose-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-rose">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h5.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V15M7 3a2 2 0 00-2 2v10a2 2 0 002 2h3" opacity="0.5" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 7h5.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V19a2 2 0 01-2 2h-6a2 2 0 01-2-2V9a2 2 0 012-2z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 13h4" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 11v4" />
               </svg>
             </div>
-            <h3 class="text-xs sm:text-base font-bold text-white group-hover:text-rose-300 transition-colors">Merge PDF</h3>
-            <p class="text-[9px] sm:text-[11px] text-slate-400 mt-1 leading-tight">Combine PDFs</p>
+            <span class="card-title group-hover:text-rose-300">Merge PDF</span>
+            <span class="card-subtitle group-hover:text-slate-300">Combine PDFs</span>
           </button>
 
-          <button onclick="selectMode('split-pdf')" class="col-span-2 sm:col-span-1 w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-amber-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
-            <div class="w-11 h-11 mb-2 sm:mb-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+          <!-- 3. Split PDF -->
+          <button onclick="selectMode('split-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-amber-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-amber">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 10V4a1 1 0 00-1-1H6a1 1 0 00-1 1v6M19 14v6a1 1 0 00-1 1H6a1 1 0 00-1-1v-6" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m-3-3l3-3 3 3" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" stroke-dasharray="2 3" />
               </svg>
             </div>
-            <h3 class="text-xs sm:text-base font-bold text-white group-hover:text-amber-300 transition-colors">Split PDF</h3>
-            <p class="text-[9px] sm:text-[11px] text-slate-400 mt-1 leading-tight">Extract pages</p>
+            <span class="card-title group-hover:text-amber-300">Split PDF</span>
+            <span class="card-subtitle group-hover:text-slate-300">Extract pages</span>
           </button>
+
+          <!-- 4. Lock PDF -->
+          <button onclick="selectMode('lock-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-cyan-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-cyan">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-cyan-300">Lock PDF</span>
+            <span class="card-subtitle group-hover:text-slate-300">Add password</span>
+          </button>
+
+          <!-- 5. Unlock PDF -->
+          <button onclick="selectMode('unlock-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-lime-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-lime-500/10 border border-lime-500/20 flex items-center justify-center text-lime-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-lime">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 15l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-lime-300">Unlock PDF</span>
+            <span class="card-subtitle group-hover:text-slate-300">Remove password</span>
+          </button>
+
+          <!-- 6. PDF to Image -->
+          <button onclick="selectMode('pdf-to-image')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-orange-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-orange">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="20" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 16l5-5 5 5 5-5 5 5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-orange-300">PDF to Image</span>
+            <span class="card-subtitle group-hover:text-slate-300">Extract pages</span>
+          </button>
+
+          <!-- 7. Reorder Pages -->
+          <button onclick="selectMode('reorder-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-teal-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-teal">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 18l3-3-3-3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+                <path d="M17 12l3 3-3 3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-teal-300">Reorder Pages</span>
+            <span class="card-subtitle group-hover:text-slate-300">Rearrange pages</span>
+          </button>
+
+          <!-- 8. Coming Soon -->
+          <div class="w-full glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/50 flex flex-col items-center justify-center text-center coming-soon-card relative">
+            <span class="coming-soon-badge">Soon</span>
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-slate-700/20 border border-slate-700/30 flex items-center justify-center text-slate-600 group-hover:scale-110 transition-transform flex-shrink-0 relative z-10">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m-8-8h16" />
+              </svg>
+            </div>
+            <span class="card-title text-slate-500 relative z-10">Coming Soon</span>
+            <span class="card-subtitle text-slate-600 relative z-10">More tools</span>
+          </div>
+
         </div>
 
-        <div id="imageGrid" class="hidden grid grid-cols-2 max-w-xl mx-auto gap-3 sm:gap-4">
-          <button onclick="selectMode('compress-img')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-emerald-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
-            <div class="w-11 h-11 mb-2 sm:mb-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <!-- IMAGE TOOLS GRID -->
+        <div id="imageGrid" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          
+          <!-- 1. Compress Image -->
+          <button onclick="selectMode('compress-img')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-emerald-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-emerald">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="18" height="18" rx="3" stroke-linecap="round" stroke-linejoin="round" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16l4-4a2 2 0 012.828 0L14 16m-2-2l3-3a2 2 0 012.828 0L21 14" opacity="0.4" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v7m-2-2l2 2 2-2" />
               </svg>
             </div>
-            <h3 class="text-xs sm:text-base font-bold text-white group-hover:text-emerald-300 transition-colors">Compress Image</h3>
-            <p class="text-[9px] sm:text-[11px] text-slate-400 mt-1 leading-tight">Optimize JPG, PNG & WebP</p>
+            <span class="card-title group-hover:text-emerald-300">Compress Image</span>
+            <span class="card-subtitle group-hover:text-slate-300">Optimize images</span>
           </button>
 
-          <button onclick="selectMode('img-to-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-purple-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
-            <div class="w-11 h-11 mb-2 sm:mb-3 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+          <!-- 2. Image to PDF -->
+          <button onclick="selectMode('img-to-pdf')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-purple-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-purple">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="11" height="11" rx="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 10l3-3 4 4" opacity="0.5" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 9h8a2 2 0 012 2v10a2 2 0 01-2 2h-8a2 2 0 01-2-2v-8a2 2 0 012-2z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 13v6m-2-2l2 2 2-2" />
               </svg>
             </div>
-            <h3 class="text-xs sm:text-base font-bold text-white group-hover:text-purple-300 transition-colors">Image to PDF</h3>
-            <p class="text-[9px] sm:text-[11px] text-slate-400 mt-1 leading-tight">Convert images to PDF</p>
+            <span class="card-title group-hover:text-purple-300">Image to PDF</span>
+            <span class="card-subtitle group-hover:text-slate-300">Convert to PDF</span>
           </button>
+
+          <!-- 3. Crop Image -->
+          <button onclick="selectMode('crop-image')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-pink-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-pink">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <rect x="4" y="4" width="16" height="16" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 8h16M4 16h16M8 4v16M16 4v16" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+                <path d="M9 9h6v6H9z" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-pink-300">Crop Image</span>
+            <span class="card-subtitle group-hover:text-slate-300">Crop & presets</span>
+          </button>
+
+          <!-- 4. Metadata Scrubber -->
+          <button onclick="selectMode('scrub-metadata')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-fuchsia-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-fuchsia">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1010 10 10 10 0 00-10-10z" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+                <path d="M8 12h8M12 8v8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 6l-3 3 3 3M14 18l3-3-3-3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-fuchsia-300">Metadata Scrubber</span>
+            <span class="card-subtitle group-hover:text-slate-300">Remove EXIF/GPS</span>
+          </button>
+
+          <!-- 5. Format Converter -->
+          <button onclick="selectMode('format-converter')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-indigo-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-indigo">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <path d="M4 4h6v6H4zM14 14h6v6h-6zM14 4h6v6h-6zM4 14h6v6H4z" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+                <path d="M8 4v2M16 14v2M8 16v2M16 6v2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                <path d="M10 8l4 4M14 8l-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-indigo-300">Format Converter</span>
+            <span class="card-subtitle group-hover:text-slate-300">JPG/PNG/WebP</span>
+          </button>
+
+          <!-- 6. AVIF/WebP -->
+          <button onclick="selectMode('avif-converter')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-violet-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-violet">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 8h8v8H8z" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+                <path d="M12 8v8M8 12h8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                <text x="9" y="16" font-size="10" font-weight="bold" fill="currentColor" opacity="0.5">AVIF</text>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-violet-300">AVIF/WebP</span>
+            <span class="card-subtitle group-hover:text-slate-300">Modern formats</span>
+          </button>
+
+          <!-- 7. Resize Image -->
+          <button onclick="selectMode('resize-image')" class="w-full glass-card hover:bg-slate-800/60 active:scale-[0.98] transition-all duration-300 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 hover:border-sky-500/40 flex flex-col items-center justify-center text-center group glow-effect hover:-translate-y-1">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform flex-shrink-0 icon-sky">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 8h18M3 16h18M8 3v18M16 3v18" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+                <path d="M12 7v10M7 12h10" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+              </svg>
+            </div>
+            <span class="card-title group-hover:text-sky-300">Resize Image</span>
+            <span class="card-subtitle group-hover:text-slate-300">Social presets</span>
+          </button>
+
+          <!-- 8. Coming Soon -->
+          <div class="w-full glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/50 flex flex-col items-center justify-center text-center coming-soon-card relative">
+            <span class="coming-soon-badge">Soon</span>
+            <div class="w-10 h-10 sm:w-11 sm:h-11 mb-1.5 sm:mb-2 rounded-xl bg-slate-700/20 border border-slate-700/30 flex items-center justify-center text-slate-600 group-hover:scale-110 transition-transform flex-shrink-0 relative z-10">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m-8-8h16" />
+              </svg>
+            </div>
+            <span class="card-title text-slate-500 relative z-10">Coming Soon</span>
+            <span class="card-subtitle text-slate-600 relative z-10">More tools</span>
+          </div>
+
         </div>
       </div>
 
+      <!-- UPLOAD SECTION (SAMA SEPERTI SEBELUMNYA) -->
       <div id="uploadSection" class="w-full glass-card rounded-3xl p-5 sm:p-8 glow-effect hidden space-y-5 sm:space-y-6">
         <div class="flex items-center justify-between">
           <button onclick="goBackToModeSelection()" class="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-indigo-300 transition-colors bg-slate-800/40 hover:bg-slate-800/80 px-3.5 py-2 rounded-xl border border-slate-700/40">
@@ -333,6 +559,7 @@
         </button>
       </div>
 
+      <!-- LOADING SECTION -->
       <div id="loadingSection" class="w-full glass-card rounded-3xl p-8 md:p-10 text-center glow-effect hidden flex flex-col items-center justify-center space-y-6">
         <p class="text-base font-bold text-slate-200" id="loadingStatusText">Please wait...</p>
         <div class="w-full max-w-md h-2 bg-slate-900 rounded-full overflow-hidden relative border border-slate-800">
@@ -344,6 +571,7 @@
         </button>
       </div>
 
+      <!-- RESULT SECTION -->
       <div id="resultSection" class="w-full glass-card rounded-3xl p-5 sm:p-8 glow-effect space-y-5 sm:space-y-6 hidden">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Process Summary</span>
@@ -390,8 +618,10 @@
     </p>
   </footer>
 
+  <!-- SIDEBAR OVERLAY -->
   <div id="sidebarOverlay" onclick="closePreviewSidebar()" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
 
+  <!-- PREVIEW SIDEBAR -->
   <div id="previewSidebar" class="fixed top-0 right-0 h-full w-full sm:w-[580px] md:w-[620px] bg-slate-900 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-350 ease-in-out flex flex-col shadow-2xl">
     <div class="p-3.5 sm:p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/95 sticky top-0 z-10">
       <div class="pr-2 truncate flex flex-col">
@@ -434,13 +664,11 @@
     // AUTO UPDATE SYSTEM - VERSION HIDDEN FROM UI
     // ============================================================
     (function autoUpdate() {
-      const APP_VERSION = '2.0.0'; // Ganti setiap update (hanya developer yang tahu)
+      const APP_VERSION = '2.0.1';
       const STORAGE_KEY = 'super_compress_version';
       
-      // Hanya tampil di console browser (developer only)
       console.log(`✅ SUPER COMPRESS v${APP_VERSION} loaded`);
       
-      // 1. Clear semua service worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           registrations.forEach(function(registration) {
@@ -450,7 +678,6 @@
         });
       }
 
-      // 2. Clear semua cache storage
       if ('caches' in window) {
         caches.keys().then(function(names) {
           names.forEach(function(name) {
@@ -460,7 +687,6 @@
         });
       }
 
-      // 3. Cek versi, jika beda maka reload paksa
       const savedVersion = localStorage.getItem(STORAGE_KEY);
       if (savedVersion !== APP_VERSION) {
         localStorage.setItem(STORAGE_KEY, APP_VERSION);
@@ -689,6 +915,14 @@
         document.getElementById('uploadInstruction').innerText = "Drop image(s) here or click to upload";
         document.getElementById('uploadSubinstruction').innerText = "JPG, PNG & WebP • Ctrl+V enabled";
         actionBtn.innerText = "Compress Image Now";
+      } else {
+        badge.innerText = mode.replace(/-/g, ' ').toUpperCase();
+        badge.className = 'px-3 py-1.5 text-xs font-semibold rounded-full uppercase tracking-wider bg-indigo-500/15 text-indigo-300 border-indigo-500/20';
+        fileInput.accept = '*/*';
+        fileInput.multiple = true;
+        document.getElementById('uploadInstruction').innerText = "Drop file(s) here or click to upload";
+        document.getElementById('uploadSubinstruction').innerText = "Coming soon!";
+        actionBtn.innerText = "Process";
       }
       updateActionState();
     }
@@ -1112,6 +1346,10 @@
         } else if (state.currentMode === 'split-pdf') {
           progressBar.className = "animate-shimmer-bar h-full bg-amber-500 rounded-full shadow-[0_0_12px_rgba(245,158,11,0.8)]";
           await processSplitPdf();
+        } else {
+          showToast("This tool is coming soon!");
+          processAnother();
+          return;
         }
         
         if (!state.isCancelled) showToast("Operation completed successfully!");
@@ -1129,6 +1367,9 @@
       processAnother();
     }
 
+    // ========================
+    // EXISTING PROCESSING FUNCTIONS
+    // ========================
     async function processCompressPdf() {
       const maxTargetBytes = state.targetKB * 1024;
 
@@ -1668,7 +1909,7 @@
     // ========================
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.0.0', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=2.0.1', { updateViaCache: 'none' })
           .then((reg) => {
             console.log('Service Worker registered successfully!', reg.scope);
             reg.update();
