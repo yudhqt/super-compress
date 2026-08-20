@@ -4,22 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SUPER COMPRESS</title>
+  
+  <!-- FORCE NO CACHE (CRITICAL) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
   
-  <!-- PWA Meta Tags and Manifest -->
-  <link rel="manifest" href="manifest.json">
+  <!-- PWA Meta Tags and Manifest dengan version -->
+  <link rel="manifest" href="manifest.json?v=2.0.0">
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png?v=2.0.0">
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- CSS dengan version -->
+  <script src="https://cdn.tailwindcss.com?t=2026"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   
-  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- Libraries dengan version -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js?v=2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js?v=2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js?v=2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=2"></script>
 
   <style>
     * { 
@@ -109,7 +117,6 @@
       background: rgba(30, 41, 59, 0.8);
     }
 
-    /* Image format selector */
     .format-option {
       transition: all 0.2s ease;
     }
@@ -146,6 +153,8 @@
         <h1 onclick="resetToHome()" title="Click to go Home" class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md cursor-pointer hover:opacity-80 transition-opacity select-none">
           SUPER COMPRESS
         </h1>
+        <!-- Version Badge -->
+        <span class="absolute -top-1 -right-0 sm:-right-8 text-[8px] sm:text-[10px] font-mono-num text-indigo-400/50 bg-slate-900/50 px-2 py-0.5 rounded-full border border-indigo-500/20">v2.0.0</span>
       </div>
 
       <p class="text-slate-400 text-xs sm:text-sm mt-1.5 max-w-md mx-auto leading-relaxed px-2">
@@ -258,7 +267,6 @@
           </div>
         </div>
 
-        <!-- Image Format Selector for Compression -->
         <div id="imageFormatWrapper" class="hidden space-y-2">
           <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block">Output Format</label>
           <div class="flex gap-2" id="imageFormatGroup">
@@ -424,6 +432,70 @@
   </div>
 
   <script>
+    // ============================================================
+    // AUTO UPDATE SYSTEM FOR GITHUB PAGES
+    // ============================================================
+    (function autoUpdate() {
+      const APP_VERSION = '2.0.0';
+      const STORAGE_KEY = 'super_compress_version';
+      const GITHUB_REPO = 'YOUR_USERNAME/YOUR_REPO'; // Ganti dengan repo Anda
+      
+      console.log(`🚀 SUPER COMPRESS v${APP_VERSION} - Loading...`);
+      
+      // 1. Clear semua service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          registrations.forEach(function(registration) {
+            registration.unregister();
+            console.log('✅ Service Worker unregistered');
+          });
+        });
+      }
+
+      // 2. Clear semua cache storage
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          names.forEach(function(name) {
+            caches.delete(name);
+            console.log('✅ Cache deleted:', name);
+          });
+        });
+      }
+
+      // 3. Cek versi, jika beda maka reload paksa
+      const savedVersion = localStorage.getItem(STORAGE_KEY);
+      if (savedVersion !== APP_VERSION) {
+        localStorage.setItem(STORAGE_KEY, APP_VERSION);
+        console.log('🔄 New version detected! Reloading...');
+        // Force reload dengan bypass cache
+        window.location.reload(true);
+        return;
+      }
+
+      // 4. Cek update dari GitHub (opsional)
+      if (GITHUB_REPO && GITHUB_REPO !== 'YOUR_USERNAME/YOUR_REPO') {
+        fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits/main`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.sha) {
+              const lastCommit = data.sha.substring(0, 7);
+              const savedCommit = localStorage.getItem('super_compress_commit');
+              if (savedCommit !== lastCommit) {
+                localStorage.setItem('super_compress_commit', lastCommit);
+                console.log(`🔄 New commit detected: ${lastCommit}. Reloading...`);
+                window.location.reload(true);
+              }
+            }
+          })
+          .catch(() => console.log('ℹ️ GitHub API check skipped'));
+      }
+
+      console.log('✅ SUPER COMPRESS is up to date!');
+    })();
+
+    // ============================================================
+    // MAIN APPLICATION CODE
+    // ============================================================
     try {
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     } catch(e) {}
@@ -822,7 +894,6 @@
           <button onclick="removeFile(${index})" class="text-xs text-slate-500 hover:text-rose-400 p-2 flex-shrink-0 transition-colors">✕</button>
         `;
 
-        // Drag support
         if (isReorderable) {
           item.setAttribute('draggable', true);
           item.addEventListener('dragstart', (e) => {
@@ -1275,9 +1346,7 @@
 
       const mimeType = format === 'jpg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
       
-      // For PNG, quality parameter is ignored, so use a different strategy
       if (format === 'png') {
-        // Try to resize if PNG is too large
         let scaleFactor = 1.0;
         let blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
         
@@ -1293,7 +1362,6 @@
         return blob;
       }
 
-      // JPG and WebP compression with quality adjustment
       for (let i = 0; i < 7; i++) {
         if (state.isCancelled) break;
         let midQ = (lowQ + highQ) / 2;
@@ -1621,7 +1689,7 @@
     // ========================
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=2.0.0', { updateViaCache: 'none' })
           .then((reg) => {
             console.log('Service Worker registered successfully!', reg.scope);
             reg.update();
