@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SUPER COMPRESS</title>
   
-  <!-- FORCE NO CACHE (CRITICAL) -->
+  <!-- FORCE NO CACHE -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
   
-  <!-- PWA Meta Tags and Manifest dengan version -->
+  <!-- PWA Meta Tags and Manifest -->
   <link rel="manifest" href="manifest.json?v=2.0.0">
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon-192.png?v=2.0.0">
 
-  <!-- CSS dengan version -->
+  <!-- CSS -->
   <script src="https://cdn.tailwindcss.com?t=2026"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   
-  <!-- Libraries dengan version -->
+  <!-- Libraries -->
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js?v=2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js?v=2"></script>
   <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js?v=2"></script>
@@ -153,8 +153,6 @@
         <h1 onclick="resetToHome()" title="Click to go Home" class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md cursor-pointer hover:opacity-80 transition-opacity select-none">
           SUPER COMPRESS
         </h1>
-        <!-- Version Badge -->
-        <span class="absolute -top-1 -right-0 sm:-right-8 text-[8px] sm:text-[10px] font-mono-num text-indigo-400/50 bg-slate-900/50 px-2 py-0.5 rounded-full border border-indigo-500/20">v2.0.0</span>
       </div>
 
       <p class="text-slate-400 text-xs sm:text-sm mt-1.5 max-w-md mx-auto leading-relaxed px-2">
@@ -433,14 +431,14 @@
 
   <script>
     // ============================================================
-    // AUTO UPDATE SYSTEM FOR GITHUB PAGES
+    // AUTO UPDATE SYSTEM - VERSION HIDDEN FROM UI
     // ============================================================
     (function autoUpdate() {
-      const APP_VERSION = '2.0.0';
+      const APP_VERSION = '2.0.0'; // Ganti setiap update (hanya developer yang tahu)
       const STORAGE_KEY = 'super_compress_version';
-      const GITHUB_REPO = 'YOUR_USERNAME/YOUR_REPO'; // Ganti dengan repo Anda
       
-      console.log(`🚀 SUPER COMPRESS v${APP_VERSION} - Loading...`);
+      // Hanya tampil di console browser (developer only)
+      console.log(`✅ SUPER COMPRESS v${APP_VERSION} loaded`);
       
       // 1. Clear semua service worker
       if ('serviceWorker' in navigator) {
@@ -467,30 +465,11 @@
       if (savedVersion !== APP_VERSION) {
         localStorage.setItem(STORAGE_KEY, APP_VERSION);
         console.log('🔄 New version detected! Reloading...');
-        // Force reload dengan bypass cache
         window.location.reload(true);
         return;
       }
 
-      // 4. Cek update dari GitHub (opsional)
-      if (GITHUB_REPO && GITHUB_REPO !== 'YOUR_USERNAME/YOUR_REPO') {
-        fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits/main`)
-          .then(res => res.json())
-          .then(data => {
-            if (data && data.sha) {
-              const lastCommit = data.sha.substring(0, 7);
-              const savedCommit = localStorage.getItem('super_compress_commit');
-              if (savedCommit !== lastCommit) {
-                localStorage.setItem('super_compress_commit', lastCommit);
-                console.log(`🔄 New commit detected: ${lastCommit}. Reloading...`);
-                window.location.reload(true);
-              }
-            }
-          })
-          .catch(() => console.log('ℹ️ GitHub API check skipped'));
-      }
-
-      console.log('✅ SUPER COMPRESS is up to date!');
+      console.log('✅ App is up to date');
     })();
 
     // ============================================================
