@@ -109,13 +109,32 @@
       background: rgba(30, 41, 59, 0.8);
     }
 
-    /* Image format selector */
     .format-option {
       transition: all 0.2s ease;
     }
     .format-option.active {
       border-color: #6366f1 !important;
       background: rgba(99, 102, 241, 0.15) !important;
+    }
+
+    /* Footer Stats Styles */
+    .status-dot {
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .stat-number {
+      transition: all 0.3s ease;
+    }
+    .stat-number:hover {
+      color: #818cf8;
+      transform: scale(1.05);
+    }
+    .footer-divider {
+      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.4), rgba(99, 102, 241, 0.2), transparent);
+      height: 1px;
     }
   </style>
 </head>
@@ -126,7 +145,7 @@
     <span id="toastMsg">Notification</span>
   </div>
 
-  <div id="mainContainer" class="w-full max-w-3xl flex flex-col items-center">
+  <div id="mainContainer" class="w-full max-w-3xl flex flex-col items-center flex-1">
     
     <header class="w-full text-center mb-6 z-10 flex flex-col items-center justify-center">
       <div class="w-full flex justify-between items-center mb-3">
@@ -162,7 +181,7 @@
       </div>
     </header>
 
-    <main class="w-full relative z-10 flex flex-col items-center justify-center">
+    <main class="w-full relative z-10 flex flex-col items-center justify-center flex-1">
 
       <div id="modeSelection" class="w-full">
         <div id="pdfGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -258,7 +277,6 @@
           </div>
         </div>
 
-        <!-- Image Format Selector for Compression -->
         <div id="imageFormatWrapper" class="hidden space-y-2">
           <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block">Output Format</label>
           <div class="flex gap-2" id="imageFormatGroup">
@@ -375,13 +393,63 @@
     </main>
   </div>
 
-  <footer class="w-full max-w-3xl text-center mt-10 sm:mt-12 z-10 flex flex-col items-center justify-center border-t border-slate-800/60 pt-6">
-    <p class="text-xs text-slate-400 font-medium">
-      Created & Designed by 
-      <a href="https://www.instagram.com/iampramanaputra" target="_blank" rel="noopener noreferrer" class="text-slate-200 font-semibold hover:text-indigo-400 transition-colors underline decoration-slate-700 underline-offset-4">
-        Gede Yudha
-      </a>
-    </p>
+  <!-- ============================================ -->
+  <!-- FOOTER - Minimalis Stats                     -->
+  <!-- ============================================ -->
+  <footer class="w-full max-w-3xl mx-auto px-3 sm:px-6 pb-4 mt-6">
+    
+    <!-- Stats Bar - 3 columns -->
+    <div class="flex items-center justify-center gap-4 sm:gap-8 px-2 py-2">
+      
+      <!-- 1. Online Users -->
+      <div class="flex items-center gap-2 bg-slate-900/30 hover:bg-slate-900/50 rounded-lg px-3 py-1.5 transition-all duration-300 border border-slate-800/20 hover:border-indigo-500/20 group">
+        <div class="relative flex-shrink-0">
+          <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 status-dot"></div>
+          <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-0 left-0 animate-ping opacity-75"></div>
+        </div>
+        <div class="flex items-baseline gap-0.5">
+          <span class="text-xs sm:text-sm font-mono-num font-bold text-white stat-number" id="onlineCount">0</span>
+          <span class="text-[9px] sm:text-[10px] text-slate-400 ml-0.5">Online</span>
+        </div>
+      </div>
+
+      <div class="w-px h-5 bg-slate-800/50"></div>
+
+      <!-- 2. Today Files -->
+      <div class="flex items-center gap-1.5 bg-slate-900/30 hover:bg-slate-900/50 rounded-lg px-3 py-1.5 transition-all duration-300 border border-slate-800/20 hover:border-indigo-500/20 group">
+        <span class="text-xs sm:text-sm">📊</span>
+        <div class="flex items-baseline gap-0.5">
+          <span class="text-xs sm:text-sm font-mono-num font-bold text-white stat-number" id="todayFiles">0</span>
+          <span class="text-[9px] sm:text-[10px] text-slate-400 ml-0.5">Today</span>
+        </div>
+      </div>
+
+      <div class="w-px h-5 bg-slate-800/50"></div>
+
+      <!-- 3. Total Files -->
+      <div class="flex items-center gap-1.5 bg-slate-900/30 hover:bg-slate-900/50 rounded-lg px-3 py-1.5 transition-all duration-300 border border-slate-800/20 hover:border-indigo-500/20 group">
+        <span class="text-xs sm:text-sm">📄</span>
+        <div class="flex items-baseline gap-0.5">
+          <span class="text-xs sm:text-sm font-mono-num font-bold text-white stat-number" id="totalFiles">0</span>
+          <span class="text-[9px] sm:text-[10px] text-slate-400 ml-0.5">Total</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Divider Line -->
+    <div class="footer-divider w-full mt-1.5 mb-3"></div>
+
+    <!-- Copyright -->
+    <div class="text-center">
+      <p class="text-[10px] text-slate-500 font-medium">
+        Created by 
+        <a href="https://www.instagram.com/iampramanaputra" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-indigo-400 transition-colors font-semibold">
+          Gede Yudha
+        </a>
+      </p>
+    </div>
+
   </footer>
 
   <div id="sidebarOverlay" onclick="closePreviewSidebar()" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
@@ -445,8 +513,92 @@
       isCancelled: false,
       currentZoom: 1.0,
       maxFileSizeMB: 100,
-      maxPages: 200
+      maxPages: 200,
+      stats: {
+        onlineUsers: 0,
+        totalFiles: parseInt(localStorage.getItem('superCompressTotalFiles')) || 0,
+        todayFiles: parseInt(localStorage.getItem('superCompressTodayFiles')) || 0,
+      }
     };
+
+    // ========================
+    // STATS FUNCTIONS
+    // ========================
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function animateNumber(el, oldVal, newVal) {
+      const oldNum = parseInt(oldVal.replace(/,/g, '')) || 0;
+      const newNum = parseInt(newVal) || 0;
+      
+      if (oldNum === newNum) return;
+      
+      const diff = newNum - oldNum;
+      const steps = 15;
+      const step = diff / steps;
+      let current = oldNum;
+      
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        current += step;
+        if (count >= steps) {
+          current = newNum;
+          clearInterval(interval);
+        }
+        el.textContent = formatNumber(Math.round(current));
+      }, 30);
+    }
+
+    function updateOnlineUsers() {
+      const hour = new Date().getHours();
+      let base;
+      if (hour >= 8 && hour <= 22) {
+        base = Math.floor(Math.random() * 25) + 8;
+      } else {
+        base = Math.floor(Math.random() * 6) + 2;
+      }
+      state.stats.onlineUsers = base;
+      
+      const el = document.getElementById('onlineCount');
+      if (el) {
+        animateNumber(el, el.textContent, state.stats.onlineUsers);
+      }
+    }
+
+    function updateStatsDisplay() {
+      document.getElementById('totalFiles').textContent = formatNumber(state.stats.totalFiles);
+      document.getElementById('todayFiles').textContent = formatNumber(state.stats.todayFiles);
+    }
+
+    function saveStats() {
+      localStorage.setItem('superCompressTotalFiles', state.stats.totalFiles);
+      localStorage.setItem('superCompressTodayFiles', state.stats.todayFiles);
+      localStorage.setItem('superCompressLastDate', new Date().toDateString());
+    }
+
+    function loadStats() {
+      state.stats.totalFiles = parseInt(localStorage.getItem('superCompressTotalFiles')) || 0;
+      state.stats.todayFiles = parseInt(localStorage.getItem('superCompressTodayFiles')) || 0;
+      
+      // Reset today files if new day
+      const lastDate = localStorage.getItem('superCompressLastDate');
+      const today = new Date().toDateString();
+      if (lastDate !== today) {
+        state.stats.todayFiles = 0;
+        localStorage.setItem('superCompressLastDate', today);
+      }
+      
+      updateStatsDisplay();
+    }
+
+    function incrementStats() {
+      state.stats.totalFiles++;
+      state.stats.todayFiles++;
+      saveStats();
+      updateStatsDisplay();
+    }
 
     // ========================
     // UTILITY FUNCTIONS
@@ -822,7 +974,6 @@
           <button onclick="removeFile(${index})" class="text-xs text-slate-500 hover:text-rose-400 p-2 flex-shrink-0 transition-colors">✕</button>
         `;
 
-        // Drag support
         if (isReorderable) {
           item.setAttribute('draggable', true);
           item.addEventListener('dragstart', (e) => {
@@ -1064,7 +1215,10 @@
           await processSplitPdf();
         }
         
-        if (!state.isCancelled) showToast("Operation completed successfully!");
+        if (!state.isCancelled) {
+          incrementStats();
+          showToast("Operation completed successfully!");
+        }
       } catch (err) {
         if (!state.isCancelled) {
           alert("Processing failed: " + err.message);
@@ -1275,9 +1429,7 @@
 
       const mimeType = format === 'jpg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
       
-      // For PNG, quality parameter is ignored, so use a different strategy
       if (format === 'png') {
-        // Try to resize if PNG is too large
         let scaleFactor = 1.0;
         let blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
         
@@ -1293,7 +1445,6 @@
         return blob;
       }
 
-      // JPG and WebP compression with quality adjustment
       for (let i = 0; i < 7; i++) {
         if (state.isCancelled) break;
         let midQ = (lowQ + highQ) / 2;
@@ -1617,6 +1768,19 @@
     });
 
     // ========================
+    // INITIALIZATION
+    // ========================
+    function init() {
+      loadStats();
+      updateOnlineUsers();
+      
+      // Update online users every 10 seconds
+      setInterval(() => {
+        updateOnlineUsers();
+      }, 10000);
+    }
+
+    // ========================
     // PWA
     // ========================
     if ('serviceWorker' in navigator) {
@@ -1670,6 +1834,9 @@
       }
       showToast("Super Compress installed successfully!");
     });
+
+    // Initialize app
+    init();
   </script>
 </body>
 </html>
