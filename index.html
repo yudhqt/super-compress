@@ -825,29 +825,37 @@ async function processSplitPdf(){
 }
 
 // ============================================================
-// LOCK PDF - FIXED
+// LOCK PDF
 // ============================================================
 async function processLockPdf(){
-  const f=state.selectedFiles[0];
-  const password=document.getElementById('pdfPassword').value;
-  if(!password){showToast('Please enter a password');return}
-  const confirm=document.getElementById('confirmPassword').value;
-  if(password!==confirm){showToast('Passwords do not match');return}
-  document.getElementById('loadingStatusText').innerText='Locking '+f.name+'...';
+  const f = state.selectedFiles[0];
+  const password = document.getElementById('pdfPassword').value;
+  
+  if(!password){
+    showToast('Please enter a password');
+    return;
+  }
+  const confirm = document.getElementById('confirmPassword').value;
+  if(password !== confirm){
+    showToast('Passwords do not match');
+    return;
+  }
+  document.getElementById('loadingStatusText').innerText = 'Locking ' + f.name + '...';
   try{
-    const bytes=await f.arrayBuffer();
-    const pdf=await PDFLib.PDFDocument.load(bytes);
+    const bytes = await f.arrayBuffer();
+    const pdf = await PDFLib.PDFDocument.load(bytes);
     pdf.encrypt({
-      userPassword:password,
-      ownerPassword:password
-      // permissions dihapus karena tidak support di versi ini
+      userPassword: password,
+      ownerPassword: password
     });
-    const result=await pdf.save();
-    state.processedBlob=new Blob([result],{type:'application/pdf'});
-    state.processedFileName=sanitizeFilename(f.name)+'_locked.pdf';
-    displayResults(f.size,state.processedBlob.size)
-  }catch(e){
-    showToast('Error locking PDF: '+e.message);
+    const result = await pdf.save();
+    state.processedBlob = new Blob([result], { type: 'application/pdf' });
+    state.processedFileName = sanitizeFilename(f.name) + '_locked.pdf';
+    displayResults(f.size, state.processedBlob.size);
+    showToast('✅ PDF locked successfully! Downloading...');
+    setTimeout(() => downloadFile(), 1000);
+  } catch(e){
+    showToast('Error locking PDF: ' + e.message);
     processAnother();
   }
 }
