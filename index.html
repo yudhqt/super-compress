@@ -825,20 +825,33 @@ async function processSplitPdf(){
 }
 
 // ============================================================
-// NEW TOOLS - LOCK PDF
+// LOCK PDF - FIXED
 // ============================================================
 async function processLockPdf(){
-  const f=state.selectedFiles[0];const password=document.getElementById('pdfPassword').value;
+  const f=state.selectedFiles[0];
+  const password=document.getElementById('pdfPassword').value;
   if(!password){showToast('Please enter a password');return}
   const confirm=document.getElementById('confirmPassword').value;
   if(password!==confirm){showToast('Passwords do not match');return}
   document.getElementById('loadingStatusText').innerText='Locking '+f.name+'...';
-  const bytes=await f.arrayBuffer();const pdf=await PDFLib.PDFDocument.load(bytes);
-  pdf.encrypt({userPassword:password,ownerPassword:password,permissions:PDFLib.PDFDocument.Permissions.FLAGS});
-  const result=await pdf.save();state.processedBlob=new Blob([result],{type:'application/pdf'});
-  state.processedFileName=sanitizeFilename(f.name)+'_locked.pdf';displayResults(f.size,state.processedBlob.size)
+  try{
+    const bytes=await f.arrayBuffer();
+    const pdf=await PDFLib.PDFDocument.load(bytes);
+    pdf.encrypt({
+      userPassword:password,
+      ownerPassword:password
+      // permissions dihapus karena tidak support di versi ini
+    });
+    const result=await pdf.save();
+    state.processedBlob=new Blob([result],{type:'application/pdf'});
+    state.processedFileName=sanitizeFilename(f.name)+'_locked.pdf';
+    displayResults(f.size,state.processedBlob.size)
+  }catch(e){
+    showToast('Error locking PDF: '+e.message);
+    processAnother();
+  }
 }
-
+  
 // ============================================================
 // NEW TOOLS - UNLOCK PDF
 // ============================================================
